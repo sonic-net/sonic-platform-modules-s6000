@@ -111,10 +111,9 @@ struct qsfp_mux_platform_data {
 };
 
 struct qsfp_mux {
-    struct i2c_adapter *parent;
-    struct i2c_adapter **child;
     struct qsfp_mux_platform_data data;
 };
+
 static struct qsfp_mux_platform_data s6000_qsfp_mux_platform_data[] = {
     {
         .parent         = S6000_MUX_BASE_NR + 2,
@@ -868,9 +867,9 @@ static int cpld_reg_write_byte(struct i2c_client *client, u8 regaddr, u8 val)
                                              regaddr, I2C_SMBUS_BYTE_DATA, &data);
 }
 
-static int qsfp_mux_select(struct i2c_adapter *adap, void *data, u32 chan)
+static int qsfp_mux_select(struct i2c_mux_core *muxc, u32 chan)
 {
-    struct qsfp_mux *mux = data;
+    struct qsfp_mux *mux = i2c_mux_priv(muxc);
     unsigned short mask = ~(unsigned short)(1 << chan);
 
     cpld_reg_write_byte(mux->data.cpld, mux->data.reg_addr, (u8)(mask & 0xff));
@@ -879,6 +878,7 @@ static int qsfp_mux_select(struct i2c_adapter *adap, void *data, u32 chan)
 
 static int __init qsfp_mux_probe(struct platform_device *pdev)
 {
+    struct i2c_mux_core *muxc;
     struct qsfp_mux *mux;
     struct qsfp_mux_platform_data *pdata;
     struct i2c_adapter *parent;
@@ -903,23 +903,24 @@ static int __init qsfp_mux_probe(struct platform_device *pdev)
         goto alloc_failed;
     }
 
-    mux->parent = parent;
     mux->data = *pdata;
-    mux->child = kzalloc(sizeof(struct i2c_adapter *) * QSFP_MODULE_NUM, GFP_KERNEL);
-    if (!mux->child) {
+
+    muxc = i2c_mux_alloc(parent, &pdev->dev, QSFP_MODULE_NUM, 0, 0,
+                         qsfp_mux_select, NULL);
+    if (!muxc) {
         ret = -ENOMEM;
         goto alloc_failed2;
     }
+    muxc->priv = mux;
+
+    platform_set_drvdata(pdev, mux);
 
     for (i = 0; i < QSFP_MODULE_NUM; i++) {
         int nr = pdata->base_nr + i;
         unsigned int class = 0;
 
-        mux->child[i] = i2c_add_mux_adapter(parent, &pdev->dev, mux,
-                           nr, i, class,
-                           qsfp_mux_select, NULL);
-        if (!mux->child[i]) {
-            ret = -ENODEV;
+        ret = i2c_mux_add_adapter(muxc, nr, i, class);
+        if (ret) {
             dev_err(&pdev->dev, "Failed to add adapter %d\n", i);
             goto add_adapter_failed;
         }
@@ -927,14 +928,11 @@ static int __init qsfp_mux_probe(struct platform_device *pdev)
 
     dev_info(&pdev->dev, "16 port mux on %s adapter\n", parent->name);
 
-    platform_set_drvdata(pdev, mux);
 
     return 0;
 
 add_adapter_failed:
-    for (; i > 0; i--)
-        i2c_del_mux_adapter(mux->child[i - 1]);
-    kfree(mux->child);
+    i2c_mux_del_adapters(muxc);
 alloc_failed2:
     kfree(mux);
 alloc_failed:
@@ -945,15 +943,13 @@ alloc_failed:
 
 static int __exit qsfp_mux_remove(struct platform_device *pdev)
 {
-    int i;
-    struct qsfp_mux *mux = platform_get_drvdata(pdev);
+    struct i2c_mux_core *muxc = platform_get_drvdata(pdev);
+    struct qsfp_mux *mux = i2c_mux_priv(muxc);
 
-    for (i = 0; i < QSFP_MODULE_NUM; i++)
-        i2c_del_mux_adapter(mux->child[i]);
+    i2c_mux_del_adapters(muxc);
 
     platform_set_drvdata(pdev, NULL);
-    i2c_put_adapter(mux->parent);
-    kfree(mux->child);
+    i2c_put_adapter(muxc->parent);
     kfree(mux);
 
     return 0;
