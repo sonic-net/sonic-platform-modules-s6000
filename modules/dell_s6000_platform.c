@@ -20,11 +20,6 @@
 #define QSFP_MODULE_NUM     16
 #define QSFP_DEVICE_NUM     2
 
-#define SFF8436_INFO(data) \
-    .type = "sff8436", .addr = 0x50, .platform_data = (data)
-
-#define SFF_8346_PORT(eedata) \
-    .byte_len = 128, .page_size = 1, .flags = SFF_8436_FLAG_READONLY
 
 static void device_release(struct device *dev)
 {
@@ -148,714 +143,6 @@ static struct platform_device s6000_qsfp_mux[] = {
     },
 };
 
-/*
- * S6000 I2C DEVICES
- */
-
-struct i2c_device_platform_data {
-    int parent;
-    struct i2c_board_info           info;
-    struct i2c_client              *client;
-};
-
-static struct sff_8436_platform_data sff_8436_port[] = {
-    { SFF_8346_PORT() },
-    { SFF_8346_PORT() },
-    { SFF_8346_PORT() },
-    { SFF_8346_PORT() },
-    { SFF_8346_PORT() },
-    { SFF_8346_PORT() },
-    { SFF_8346_PORT() },
-    { SFF_8346_PORT() },
-    { SFF_8346_PORT() },
-    { SFF_8346_PORT() },
-    { SFF_8346_PORT() },
-    { SFF_8346_PORT() },
-    { SFF_8346_PORT() },
-    { SFF_8346_PORT() },
-    { SFF_8346_PORT() },
-    { SFF_8346_PORT() },
-    { SFF_8346_PORT() },
-    { SFF_8346_PORT() },
-    { SFF_8346_PORT() },
-    { SFF_8346_PORT() },
-    { SFF_8346_PORT() },
-    { SFF_8346_PORT() },
-    { SFF_8346_PORT() },
-    { SFF_8346_PORT() },
-    { SFF_8346_PORT() },
-    { SFF_8346_PORT() },
-    { SFF_8346_PORT() },
-    { SFF_8346_PORT() },
-    { SFF_8346_PORT() },
-    { SFF_8346_PORT() },
-    { SFF_8346_PORT() },
-    { SFF_8346_PORT() },
-};
-
-static struct i2c_device_platform_data s6000_i2c_device_platform_data[] = {
-    {
-        /* PSU 1 FRU EEPROM */
-        .parent = 1,
-        .info = { I2C_BOARD_INFO("24c02", 0x50) },
-        .client = NULL,
-    },
-    {
-        /* PSU 2 FRU EEPROM */
-        .parent = 1,
-        .info = { I2C_BOARD_INFO("24c02", 0x51) },
-    },
-    {
-        /* PSU 1 PMBUS */
-        .parent = 1,
-        .info = { I2C_BOARD_INFO("dni_dps460", 0x58) },
-    },
-    {
-        /* PSU 2 PMBUS */
-        .parent = 1,
-        .info = { I2C_BOARD_INFO("dni_dps460", 0x59) },
-    },
-    {
-        /* TEMP Sensor EMC1428-7 */
-        .parent = S6000_MUX_BASE_NR,
-        .info = { I2C_BOARD_INFO("emc1403", 0x4d) },
-    },
-    {
-        /* JEDEC JC 42.4 compliant temperature sensors */
-        .parent = S6000_MUX_BASE_NR,
-        .info = { I2C_BOARD_INFO("jc42", 0x18) },
-    },
-    {
-        /* DDR3 MODULE SPD */
-        .parent = S6000_MUX_BASE_NR,
-        .info = { I2C_BOARD_INFO("spd", 0x50) } ,
-    },
-    {
-        /*
-         * ID EEPROM
-         * AT24C64D-SSHM-T
-         */
-        .parent = S6000_MUX_BASE_NR,
-        .info = { I2C_BOARD_INFO("24c02", 0x53) } ,
-    },
-    {
-        /*
-         * FAN Tray Controller 1
-         * MAX6620ATI+T
-         */
-        .parent = S6000_MUX_BASE_NR + 1,
-        .info = { I2C_BOARD_INFO("max6620", 0x29) },
-    },
-    {
-        /*
-         * FAN Tray Controller 2
-         * MAX6620ATI+T
-         */
-        .parent = S6000_MUX_BASE_NR + 1,
-        .info = { I2C_BOARD_INFO("max6620", 0x2a) },
-    },
-    {
-        /*
-         * Hot-Swap PSU 1
-         * LTC1451UFD#TRPBF
-        */
-        .parent = S6000_MUX_BASE_NR + 1,
-        .info = { I2C_BOARD_INFO("ltc4215", 0x40) },
-    },
-    {
-        /*
-         * Hot-Swap PSU 2
-         * LTC1451UFD#TRPBF
-        */
-        .parent = S6000_MUX_BASE_NR + 1,
-        .info = { I2C_BOARD_INFO("ltc4215", 0x42) },
-    },
-    {
-        /*
-         * Temp Sensor MAC
-         * TMP75AIDR
-        */
-        .parent = S6000_MUX_BASE_NR + 1,
-        .info = { I2C_BOARD_INFO("tmp75", 0x4c) },
-    },
-    {
-        /*
-         * Temp Sensor NIC
-         * TMP75AIDR
-        */
-        .parent = S6000_MUX_BASE_NR + 1,
-        .info = { I2C_BOARD_INFO("tmp75", 0x4d) },
-    },
-    {
-        /*
-         * Temp Sensor AMB
-         * TMP75AIDR
-        */
-        .parent = S6000_MUX_BASE_NR + 1,
-        .info = { I2C_BOARD_INFO("tmp75", 0x4e) },
-    },
-    {
-        /*
-         * FAN Tray 1 EEPROM
-         * M24C02-WMN6TP
-        */
-        .parent = S6000_MUX_BASE_NR + 1,
-        .info = { I2C_BOARD_INFO("24c02", 0x51) },
-    },
-    {
-        /*
-         * FAN Tray 2 EEPROM
-         * M24C02-WMN6TP
-        */
-        .parent = S6000_MUX_BASE_NR + 1,
-        .info = { I2C_BOARD_INFO("24c02", 0x52) },
-    },
-    {
-        /*
-         * FAN Tray 3 EEPROM
-         * M24C02-WMN6TP
-        */
-        .parent = S6000_MUX_BASE_NR + 1,
-        .info = { I2C_BOARD_INFO("24c02", 0x53) },
-    },
-    /* QSFP Modules */
-    {
-        .parent = QSFP_MODULE_BASE_NR,
-        .info = { SFF8436_INFO(&sff_8436_port[0]) },
-    },
-    {
-        .parent = QSFP_MODULE_BASE_NR + 1,
-        .info = { SFF8436_INFO(&sff_8436_port[1]) },
-    },
-    {
-        .parent = QSFP_MODULE_BASE_NR + 2,
-        .info = { SFF8436_INFO(&sff_8436_port[2]) },
-    },
-    {
-        .parent = QSFP_MODULE_BASE_NR + 3,
-        .info = { SFF8436_INFO(&sff_8436_port[3]) },
-    },
-    {
-        .parent = QSFP_MODULE_BASE_NR + 4,
-        .info = { SFF8436_INFO(&sff_8436_port[4]) },
-    },
-    {
-        .parent = QSFP_MODULE_BASE_NR + 5,
-        .info = { SFF8436_INFO(&sff_8436_port[5]) },
-    },
-    {
-        .parent = QSFP_MODULE_BASE_NR + 6,
-        .info = { SFF8436_INFO(&sff_8436_port[6]) },
-    },
-    {
-        .parent = QSFP_MODULE_BASE_NR + 7,
-        .info = { SFF8436_INFO(&sff_8436_port[7]) },
-    },
-    {
-        .parent = QSFP_MODULE_BASE_NR + 8,
-        .info = { SFF8436_INFO(&sff_8436_port[8]) },
-    },
-    {
-        .parent = QSFP_MODULE_BASE_NR + 9,
-        .info = { SFF8436_INFO(&sff_8436_port[9]) },
-    },
-    {
-        .parent = QSFP_MODULE_BASE_NR + 10,
-        .info = { SFF8436_INFO(&sff_8436_port[10]) },
-    },
-    {
-        .parent = QSFP_MODULE_BASE_NR + 11,
-        .info = { SFF8436_INFO(&sff_8436_port[11]) },
-    },
-    {
-        .parent = QSFP_MODULE_BASE_NR + 12,
-        .info = { SFF8436_INFO(&sff_8436_port[12]) },
-    },
-    {
-        .parent = QSFP_MODULE_BASE_NR + 13,
-        .info = { SFF8436_INFO(&sff_8436_port[13]) },
-    },
-    {
-        .parent = QSFP_MODULE_BASE_NR + 14,
-        .info = { SFF8436_INFO(&sff_8436_port[14]) },
-    },
-    {
-        .parent = QSFP_MODULE_BASE_NR + 15,
-        .info = { SFF8436_INFO(&sff_8436_port[15]) },
-    },
-    {
-        .parent = QSFP_MODULE_BASE_NR + 16,
-        .info = { SFF8436_INFO(&sff_8436_port[16]) },
-    },
-    {
-        .parent = QSFP_MODULE_BASE_NR + 17,
-        .info = { SFF8436_INFO(&sff_8436_port[17]) },
-    },
-    {
-        .parent = QSFP_MODULE_BASE_NR + 18,
-        .info = { SFF8436_INFO(&sff_8436_port[18]) },
-    },
-    {
-        .parent = QSFP_MODULE_BASE_NR + 19,
-        .info = { SFF8436_INFO(&sff_8436_port[19]) },
-    },
-    {
-        .parent = QSFP_MODULE_BASE_NR + 20,
-        .info = { SFF8436_INFO(&sff_8436_port[20]) },
-    },
-    {
-        .parent = QSFP_MODULE_BASE_NR + 21,
-        .info = { SFF8436_INFO(&sff_8436_port[21]) },
-    },
-    {
-        .parent = QSFP_MODULE_BASE_NR + 22,
-        .info = { SFF8436_INFO(&sff_8436_port[22]) },
-    },
-    {
-        .parent = QSFP_MODULE_BASE_NR + 23,
-        .info = { SFF8436_INFO(&sff_8436_port[23]) },
-    },
-    {
-        .parent = QSFP_MODULE_BASE_NR + 24,
-        .info = { SFF8436_INFO(&sff_8436_port[24]) },
-    },
-    {
-        .parent = QSFP_MODULE_BASE_NR + 25,
-        .info = { SFF8436_INFO(&sff_8436_port[25]) },
-    },
-    {
-        .parent = QSFP_MODULE_BASE_NR + 26,
-        .info = { SFF8436_INFO(&sff_8436_port[26]) },
-    },
-    {
-        .parent = QSFP_MODULE_BASE_NR + 27,
-        .info = { SFF8436_INFO(&sff_8436_port[27]) },
-    },
-    {
-        .parent = QSFP_MODULE_BASE_NR + 28,
-        .info = { SFF8436_INFO(&sff_8436_port[28]) },
-    },
-    {
-        .parent = QSFP_MODULE_BASE_NR + 29,
-        .info = { SFF8436_INFO(&sff_8436_port[29]) },
-    },
-    {
-        .parent = QSFP_MODULE_BASE_NR + 30,
-        .info = { SFF8436_INFO(&sff_8436_port[30]) },
-        .client = NULL,
-    },
-    {
-        .parent = QSFP_MODULE_BASE_NR + 31,
-        .info = { SFF8436_INFO(&sff_8436_port[31]) },
-        .client = NULL,
-    },
-};
-
-static struct platform_device s6000_i2c_device[] = {
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 0,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[0],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 1,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[1],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 2,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[2],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 3,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[3],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 4,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[4],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 5,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[5],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 6,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[6],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 7,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[7],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 8,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[8],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 9,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[9],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 10,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[10],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 11,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[11],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 12,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[12],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 13,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[13],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 14,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[14],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 15,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[15],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 16,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[16],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 17,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[17],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 18,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[18],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 19,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[19],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 20,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[20],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 21,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[21],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 22,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[22],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 23,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[23],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 24,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[24],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 25,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[25],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 26,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[26],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 27,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[27],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 28,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[28],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 29,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[29],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 30,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[30],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 31,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[31],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 32,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[32],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 33,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[33],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 34,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[34],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 35,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[35],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 36,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[36],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 37,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[37],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 38,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[38],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 39,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[39],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 40,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[40],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 41,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[41],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 42,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[42],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 43,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[43],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 44,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[44],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 45,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[45],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 46,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[46],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 47,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[47],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 48,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[48],
-                    .release       = device_release,
-        },
-    },
-    {
-        .name                   = "dell-s6000-i2c-device",
-        .id                     = 49,
-        .dev                    = {
-                    .platform_data = &s6000_i2c_device_platform_data[49],
-                    .release       = device_release,
-        },
-    },
-};
-
-
-
 static int cpld_reg_write_byte(struct i2c_client *client, u8 regaddr, u8 val)
 {
     union i2c_smbus_data data;
@@ -890,30 +177,29 @@ static int __init qsfp_mux_probe(struct platform_device *pdev)
         return -ENODEV;
     }
 
+    mux = devm_kzalloc(&pdev->dev, sizeof(*mux), GFP_KERNEL);
+    if (!mux) {
+        return -ENOMEM;
+    }
+
+    mux->data = *pdata;
+
     parent = i2c_get_adapter(pdata->parent);
     if (!parent) {
         dev_err(&pdev->dev, "Parent adapter (%d) not found\n",
             pdata->parent);
-        return -ENODEV;
+        return -EPROBE_DEFER;
     }
-
-    mux = kzalloc(sizeof(*mux), GFP_KERNEL);
-    if (!mux) {
-        ret = -ENOMEM;
-        goto alloc_failed;
-    }
-
-    mux->data = *pdata;
 
     muxc = i2c_mux_alloc(parent, &pdev->dev, QSFP_MODULE_NUM, 0, 0,
                          qsfp_mux_select, NULL);
     if (!muxc) {
         ret = -ENOMEM;
-        goto alloc_failed2;
+        goto alloc_failed;
     }
     muxc->priv = mux;
 
-    platform_set_drvdata(pdev, mux);
+    platform_set_drvdata(pdev, muxc);
 
     for (i = 0; i < QSFP_MODULE_NUM; i++) {
         int nr = pdata->base_nr + i;
@@ -926,38 +212,32 @@ static int __init qsfp_mux_probe(struct platform_device *pdev)
         }
     }
 
-    dev_info(&pdev->dev, "16 port mux on %s adapter\n", parent->name);
-
+    dev_info(&pdev->dev, "%d port mux on %s adapter\n", QSFP_MODULE_NUM, parent->name);
 
     return 0;
 
 add_adapter_failed:
     i2c_mux_del_adapters(muxc);
-alloc_failed2:
-    kfree(mux);
 alloc_failed:
     i2c_put_adapter(parent);
 
     return ret;
 }
 
-static int __exit qsfp_mux_remove(struct platform_device *pdev)
+static int qsfp_mux_remove(struct platform_device *pdev)
 {
     struct i2c_mux_core *muxc = platform_get_drvdata(pdev);
-    struct qsfp_mux *mux = i2c_mux_priv(muxc);
 
     i2c_mux_del_adapters(muxc);
 
-    platform_set_drvdata(pdev, NULL);
     i2c_put_adapter(muxc->parent);
-    kfree(mux);
 
     return 0;
 }
 
 static struct platform_driver qsfp_mux_driver = {
     .probe  = qsfp_mux_probe,
-    .remove = __exit_p(qsfp_mux_remove), /* TODO */
+    .remove = qsfp_mux_remove,
     .driver = {
         .owner  = THIS_MODULE,
         .name   = "dell-s6000-qsfp-mux",
@@ -1853,64 +1133,6 @@ static struct platform_driver cpld_driver = {
     },
 };
 
-static int __init i2c_device_probe(struct platform_device *pdev)
-{
-    struct i2c_device_platform_data *pdata;
-    struct i2c_adapter *parent;
-
-    pdata = pdev->dev.platform_data;
-    if (!pdata) {
-        dev_err(&pdev->dev, "Missing platform data\n");
-        return -ENODEV;
-    }
-
-    parent = i2c_get_adapter(pdata->parent);
-    if (!parent) {
-        dev_err(&pdev->dev, "Parent adapter (%d) not found\n",
-            pdata->parent);
-        return -ENODEV;
-    }
-
-    pdata->client = i2c_new_device(parent, &pdata->info);
-    if (!pdata->client) {
-        dev_err(&pdev->dev, "Failed to create i2c client %s at %d\n",
-            pdata->info.type, pdata->parent);
-        return -ENODEV;
-    }
-
-    return 0;
-}
-
-static int __exit i2c_deivce_remove(struct platform_device *pdev)
-{
-    struct i2c_adapter *parent;
-    struct i2c_device_platform_data *pdata;
-
-    pdata = pdev->dev.platform_data;
-    if (!pdata) {
-        dev_err(&pdev->dev, "Missing platform data\n");
-        return -ENODEV;
-    }
-
-    if (pdata->client) {
-        parent = i2c_get_adapter(pdata->parent);
-        i2c_unregister_device(pdata->client);
-        i2c_put_adapter(parent);
-    }
-
-    return 0;
-}
-
-
-static struct platform_driver i2c_device_driver = {
-    .probe = i2c_device_probe,
-    .remove = __exit_p(i2c_deivce_remove),
-    .driver = {
-        .owner = THIS_MODULE,
-        .name = "dell-s6000-i2c-device",
-    }
-};
-
 static int __init dell_s6000_platform_init(void)
 {
     int ret = 0;
@@ -1919,8 +1141,6 @@ static int __init dell_s6000_platform_init(void)
     int i;
 
     printk("delll_s6000_platform module initialization\n");
-
-    mdelay(10000);
 
     ret = platform_driver_register(&cpld_driver);
     if (ret) {
@@ -1932,12 +1152,6 @@ static int __init dell_s6000_platform_init(void)
     if (ret) {
         printk(KERN_WARNING "Fail to register qsfp mux driver\n");
         goto error_qsfp_mux_driver;
-    }
-
-    ret = platform_driver_register(&i2c_device_driver);
-    if (ret) {
-        printk(KERN_WARNING "Fail to register i2c device driver\n");
-        goto error_i2c_device_driver;
     }
 
     ret = platform_device_register(&s6000_mux);
@@ -1966,25 +1180,11 @@ static int __init dell_s6000_platform_init(void)
         }
     }
 
-    for (i = 0; i < ARRAY_SIZE(s6000_i2c_device_platform_data); i++) {
-        ret = platform_device_register(&s6000_i2c_device[i]);
-        if (ret) {
-            printk(KERN_WARNING "fail to create qsfp mux %d\n", i);
-            goto error_i2c_device;
-        }
-    }
-
     if (ret)
         goto error_qsfp_mux;
 
     return 0;
 
-error_i2c_device:
-    i--;
-    for (; i >= 0; i--) {
-        platform_device_unregister(&s6000_i2c_device[i]);
-    }
-    i = QSFP_DEVICE_NUM;
 error_qsfp_mux:
     i--;
     for (; i >= 0; i--) {
@@ -1994,8 +1194,6 @@ error_qsfp_mux:
 error_cpld:
     platform_device_unregister(&s6000_mux);
 error_mux:
-    platform_driver_unregister(&i2c_device_driver);
-error_i2c_device_driver:
     platform_driver_unregister(&qsfp_mux_driver);
 error_qsfp_mux_driver:
     platform_driver_unregister(&cpld_driver);
@@ -2007,14 +1205,11 @@ static void __exit dell_s6000_platform_exit(void)
 {
     int i;
 
-    for (i = 0; i < ARRAY_SIZE(s6000_i2c_device_platform_data); i++)
-        platform_device_unregister(&s6000_i2c_device[i]);
     for (i = 0; i < MUX_CHANNEL_NUM; i++)
         platform_device_unregister(&s6000_qsfp_mux[i]);
     platform_device_unregister(&s6000_cpld);
     platform_device_unregister(&s6000_mux);
 
-    platform_driver_unregister(&i2c_device_driver);
     platform_driver_unregister(&cpld_driver);
     platform_driver_unregister(&qsfp_mux_driver);
 }
