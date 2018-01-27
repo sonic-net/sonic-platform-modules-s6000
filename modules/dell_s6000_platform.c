@@ -1123,16 +1123,36 @@ static ssize_t get_modprs(struct device *dev, struct device_attribute *devattr, 
     return sprintf(buf, "0x%08x\n", data);
 }
 
+static ssize_t set_power_reset(struct device *dev, struct device_attribute *devattr, const char *buf, size_t count) 
+{
+    unsigned long data;
+    int err;
+    struct cpld_platform_data *pdata = dev->platform_data;
+
+    err = kstrtoul(buf, 10, &data);
+    if (err)
+        return err;
+
+    if (data)
+    {
+        i2c_smbus_write_byte_data(pdata[system_cpld].client, 0x1, (u8)(0xfd));
+    }
+
+    return count;
+}
+
 static DEVICE_ATTR(qsfp_modsel, S_IRUGO, get_modsel, NULL);
 static DEVICE_ATTR(qsfp_modprs, S_IRUGO, get_modprs, NULL);
 static DEVICE_ATTR(qsfp_lpmode, S_IRUGO | S_IWUSR, get_lpmode, set_lpmode);
 static DEVICE_ATTR(qsfp_reset,  S_IRUGO | S_IWUSR, get_reset, set_reset);
+static DEVICE_ATTR(power_reset, S_IRUGO | S_IWUSR, NULL, set_power_reset);
 
 static struct attribute *s6000_cpld_attrs[] = {
     &dev_attr_qsfp_modsel.attr,
     &dev_attr_qsfp_lpmode.attr,
     &dev_attr_qsfp_reset.attr,
     &dev_attr_qsfp_modprs.attr,
+    &dev_attr_power_reset.attr,
     NULL,
 };
 
