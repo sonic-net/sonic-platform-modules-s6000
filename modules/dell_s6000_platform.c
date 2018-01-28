@@ -1,4 +1,4 @@
-#include <linux/module.h>   
+#include <linux/module.h>
 #include <linux/kernel.h>
 #include <linux/sysfs.h>
 #include <linux/slab.h>
@@ -21,7 +21,7 @@
 #define QSFP_DEVICE_NUM     2
 
 #define SFF8436_INFO(data) \
-    .type = "sff8436", .addr = 0x50, .platform_data = (data) 
+    .type = "sff8436", .addr = 0x50, .platform_data = (data)
 
 #define SFF_8346_PORT(eedata) \
     .byte_len = 128, .page_size = 1, .flags = SFF_8436_FLAG_READONLY
@@ -32,10 +32,10 @@ static void device_release(struct device *dev)
 }
 
 /*
- * S6000 74CBTLV3253 MUX 
+ * S6000 74CBTLV3253 MUX
  */
 static const unsigned s6000_mux_gpios[] = {
-    1, 2 
+    1, 2
 };
 
 static const unsigned s6000_mux_values[] = {
@@ -195,258 +195,258 @@ static struct sff_8436_platform_data sff_8436_port[] = {
 };
 
 static struct i2c_device_platform_data s6000_i2c_device_platform_data[] = {
-    { 
+    {
         /* PSU 1 FRU EEPROM */
-        .parent = 1, 
+        .parent = 1,
         .info = { I2C_BOARD_INFO("24c02", 0x50) },
         .client = NULL,
     },
-    { 
+    {
         /* PSU 2 FRU EEPROM */
-        .parent = 1, 
-        .info = { I2C_BOARD_INFO("24c02", 0x51) }, 
+        .parent = 1,
+        .info = { I2C_BOARD_INFO("24c02", 0x51) },
     },
-    { 
+    {
         /* PSU 1 PMBUS */
-        .parent = 1, 
-        .info = { I2C_BOARD_INFO("dni_dps460", 0x58) }, 
+        .parent = 1,
+        .info = { I2C_BOARD_INFO("dni_dps460", 0x58) },
     },
-    { 
+    {
         /* PSU 2 PMBUS */
-        .parent = 1, 
-        .info = { I2C_BOARD_INFO("dni_dps460", 0x59) }, 
+        .parent = 1,
+        .info = { I2C_BOARD_INFO("dni_dps460", 0x59) },
     },
-    { 
+    {
         /* TEMP Sensor EMC1428-7 */
-        .parent = S6000_MUX_BASE_NR, 
-        .info = { I2C_BOARD_INFO("emc1403", 0x4d) }, 
+        .parent = S6000_MUX_BASE_NR,
+        .info = { I2C_BOARD_INFO("emc1403", 0x4d) },
     },
     {
         /* JEDEC JC 42.4 compliant temperature sensors */
         .parent = S6000_MUX_BASE_NR,
         .info = { I2C_BOARD_INFO("jc42", 0x18) },
     },
-    { 
+    {
         /* DDR3 MODULE SPD */
-        .parent = S6000_MUX_BASE_NR, 
-        .info = { I2C_BOARD_INFO("spd", 0x50) } , 
+        .parent = S6000_MUX_BASE_NR,
+        .info = { I2C_BOARD_INFO("spd", 0x50) } ,
     },
-    { 
-        /* 
+    {
+        /*
          * ID EEPROM
          * AT24C64D-SSHM-T
          */
-        .parent = S6000_MUX_BASE_NR, 
-        .info = { I2C_BOARD_INFO("24c02", 0x53) } , 
+        .parent = S6000_MUX_BASE_NR,
+        .info = { I2C_BOARD_INFO("24c02", 0x53) } ,
     },
-    { 
-        /* 
-         * FAN Tray Controller 1 
+    {
+        /*
+         * FAN Tray Controller 1
          * MAX6620ATI+T
          */
-        .parent = S6000_MUX_BASE_NR + 1, 
-        .info = { I2C_BOARD_INFO("max6620", 0x29) }, 
+        .parent = S6000_MUX_BASE_NR + 1,
+        .info = { I2C_BOARD_INFO("max6620", 0x29) },
     },
-    { 
-        /* 
+    {
+        /*
          * FAN Tray Controller 2
          * MAX6620ATI+T
          */
-        .parent = S6000_MUX_BASE_NR + 1, 
-        .info = { I2C_BOARD_INFO("max6620", 0x2a) }, 
+        .parent = S6000_MUX_BASE_NR + 1,
+        .info = { I2C_BOARD_INFO("max6620", 0x2a) },
     },
-    { 
+    {
         /*
          * Hot-Swap PSU 1
          * LTC1451UFD#TRPBF
         */
-        .parent = S6000_MUX_BASE_NR + 1, 
-        .info = { I2C_BOARD_INFO("ltc4215", 0x40) }, 
+        .parent = S6000_MUX_BASE_NR + 1,
+        .info = { I2C_BOARD_INFO("ltc4215", 0x40) },
     },
-    { 
+    {
         /*
          * Hot-Swap PSU 2
          * LTC1451UFD#TRPBF
         */
-        .parent = S6000_MUX_BASE_NR + 1, 
-        .info = { I2C_BOARD_INFO("ltc4215", 0x42) }, 
+        .parent = S6000_MUX_BASE_NR + 1,
+        .info = { I2C_BOARD_INFO("ltc4215", 0x42) },
     },
-    { 
+    {
         /*
          * Temp Sensor MAC
          * TMP75AIDR
         */
-        .parent = S6000_MUX_BASE_NR + 1, 
-        .info = { I2C_BOARD_INFO("tmp75", 0x4c) }, 
+        .parent = S6000_MUX_BASE_NR + 1,
+        .info = { I2C_BOARD_INFO("tmp75", 0x4c) },
     },
-    { 
+    {
         /*
          * Temp Sensor NIC
          * TMP75AIDR
         */
-        .parent = S6000_MUX_BASE_NR + 1, 
-        .info = { I2C_BOARD_INFO("tmp75", 0x4d) }, 
+        .parent = S6000_MUX_BASE_NR + 1,
+        .info = { I2C_BOARD_INFO("tmp75", 0x4d) },
     },
-    { 
+    {
         /*
          * Temp Sensor AMB
          * TMP75AIDR
         */
-        .parent = S6000_MUX_BASE_NR + 1, 
-        .info = { I2C_BOARD_INFO("tmp75", 0x4e) }, 
+        .parent = S6000_MUX_BASE_NR + 1,
+        .info = { I2C_BOARD_INFO("tmp75", 0x4e) },
     },
-    { 
+    {
         /*
          * FAN Tray 1 EEPROM
          * M24C02-WMN6TP
         */
-        .parent = S6000_MUX_BASE_NR + 1, 
-        .info = { I2C_BOARD_INFO("24c02", 0x51) }, 
+        .parent = S6000_MUX_BASE_NR + 1,
+        .info = { I2C_BOARD_INFO("24c02", 0x51) },
     },
-    { 
+    {
         /*
          * FAN Tray 2 EEPROM
          * M24C02-WMN6TP
         */
-        .parent = S6000_MUX_BASE_NR + 1, 
-        .info = { I2C_BOARD_INFO("24c02", 0x52) }, 
+        .parent = S6000_MUX_BASE_NR + 1,
+        .info = { I2C_BOARD_INFO("24c02", 0x52) },
     },
-    { 
+    {
         /*
          * FAN Tray 3 EEPROM
          * M24C02-WMN6TP
         */
-        .parent = S6000_MUX_BASE_NR + 1, 
-        .info = { I2C_BOARD_INFO("24c02", 0x53) }, 
+        .parent = S6000_MUX_BASE_NR + 1,
+        .info = { I2C_BOARD_INFO("24c02", 0x53) },
     },
     /* QSFP Modules */
-    { 
-        .parent = QSFP_MODULE_BASE_NR, 
+    {
+        .parent = QSFP_MODULE_BASE_NR,
         .info = { SFF8436_INFO(&sff_8436_port[0]) },
     },
-    { 
-        .parent = QSFP_MODULE_BASE_NR + 1, 
+    {
+        .parent = QSFP_MODULE_BASE_NR + 1,
         .info = { SFF8436_INFO(&sff_8436_port[1]) },
     },
-    { 
-        .parent = QSFP_MODULE_BASE_NR + 2, 
+    {
+        .parent = QSFP_MODULE_BASE_NR + 2,
         .info = { SFF8436_INFO(&sff_8436_port[2]) },
     },
-    { 
-        .parent = QSFP_MODULE_BASE_NR + 3, 
+    {
+        .parent = QSFP_MODULE_BASE_NR + 3,
         .info = { SFF8436_INFO(&sff_8436_port[3]) },
     },
-    { 
-        .parent = QSFP_MODULE_BASE_NR + 4, 
+    {
+        .parent = QSFP_MODULE_BASE_NR + 4,
         .info = { SFF8436_INFO(&sff_8436_port[4]) },
     },
-    { 
-        .parent = QSFP_MODULE_BASE_NR + 5, 
+    {
+        .parent = QSFP_MODULE_BASE_NR + 5,
         .info = { SFF8436_INFO(&sff_8436_port[5]) },
     },
-    { 
-        .parent = QSFP_MODULE_BASE_NR + 6, 
+    {
+        .parent = QSFP_MODULE_BASE_NR + 6,
         .info = { SFF8436_INFO(&sff_8436_port[6]) },
     },
-    { 
-        .parent = QSFP_MODULE_BASE_NR + 7, 
+    {
+        .parent = QSFP_MODULE_BASE_NR + 7,
         .info = { SFF8436_INFO(&sff_8436_port[7]) },
     },
-    { 
-        .parent = QSFP_MODULE_BASE_NR + 8, 
+    {
+        .parent = QSFP_MODULE_BASE_NR + 8,
         .info = { SFF8436_INFO(&sff_8436_port[8]) },
     },
-    { 
-        .parent = QSFP_MODULE_BASE_NR + 9, 
+    {
+        .parent = QSFP_MODULE_BASE_NR + 9,
         .info = { SFF8436_INFO(&sff_8436_port[9]) },
     },
-    { 
-        .parent = QSFP_MODULE_BASE_NR + 10, 
+    {
+        .parent = QSFP_MODULE_BASE_NR + 10,
         .info = { SFF8436_INFO(&sff_8436_port[10]) },
     },
-    { 
-        .parent = QSFP_MODULE_BASE_NR + 11, 
+    {
+        .parent = QSFP_MODULE_BASE_NR + 11,
         .info = { SFF8436_INFO(&sff_8436_port[11]) },
     },
-    { 
-        .parent = QSFP_MODULE_BASE_NR + 12, 
+    {
+        .parent = QSFP_MODULE_BASE_NR + 12,
         .info = { SFF8436_INFO(&sff_8436_port[12]) },
     },
-    { 
-        .parent = QSFP_MODULE_BASE_NR + 13, 
+    {
+        .parent = QSFP_MODULE_BASE_NR + 13,
         .info = { SFF8436_INFO(&sff_8436_port[13]) },
     },
-    { 
-        .parent = QSFP_MODULE_BASE_NR + 14, 
+    {
+        .parent = QSFP_MODULE_BASE_NR + 14,
         .info = { SFF8436_INFO(&sff_8436_port[14]) },
     },
-    { 
-        .parent = QSFP_MODULE_BASE_NR + 15, 
+    {
+        .parent = QSFP_MODULE_BASE_NR + 15,
         .info = { SFF8436_INFO(&sff_8436_port[15]) },
     },
-    { 
-        .parent = QSFP_MODULE_BASE_NR + 16, 
+    {
+        .parent = QSFP_MODULE_BASE_NR + 16,
         .info = { SFF8436_INFO(&sff_8436_port[16]) },
     },
-    { 
-        .parent = QSFP_MODULE_BASE_NR + 17, 
+    {
+        .parent = QSFP_MODULE_BASE_NR + 17,
         .info = { SFF8436_INFO(&sff_8436_port[17]) },
     },
-    { 
-        .parent = QSFP_MODULE_BASE_NR + 18, 
+    {
+        .parent = QSFP_MODULE_BASE_NR + 18,
         .info = { SFF8436_INFO(&sff_8436_port[18]) },
     },
-    { 
-        .parent = QSFP_MODULE_BASE_NR + 19, 
+    {
+        .parent = QSFP_MODULE_BASE_NR + 19,
         .info = { SFF8436_INFO(&sff_8436_port[19]) },
     },
-    { 
-        .parent = QSFP_MODULE_BASE_NR + 20, 
+    {
+        .parent = QSFP_MODULE_BASE_NR + 20,
         .info = { SFF8436_INFO(&sff_8436_port[20]) },
     },
-    { 
-        .parent = QSFP_MODULE_BASE_NR + 21, 
+    {
+        .parent = QSFP_MODULE_BASE_NR + 21,
         .info = { SFF8436_INFO(&sff_8436_port[21]) },
     },
-    { 
-        .parent = QSFP_MODULE_BASE_NR + 22, 
+    {
+        .parent = QSFP_MODULE_BASE_NR + 22,
         .info = { SFF8436_INFO(&sff_8436_port[22]) },
     },
-    { 
-        .parent = QSFP_MODULE_BASE_NR + 23, 
+    {
+        .parent = QSFP_MODULE_BASE_NR + 23,
         .info = { SFF8436_INFO(&sff_8436_port[23]) },
     },
-    { 
-        .parent = QSFP_MODULE_BASE_NR + 24, 
+    {
+        .parent = QSFP_MODULE_BASE_NR + 24,
         .info = { SFF8436_INFO(&sff_8436_port[24]) },
     },
-    { 
-        .parent = QSFP_MODULE_BASE_NR + 25, 
+    {
+        .parent = QSFP_MODULE_BASE_NR + 25,
         .info = { SFF8436_INFO(&sff_8436_port[25]) },
     },
-    { 
-        .parent = QSFP_MODULE_BASE_NR + 26, 
+    {
+        .parent = QSFP_MODULE_BASE_NR + 26,
         .info = { SFF8436_INFO(&sff_8436_port[26]) },
     },
-    { 
-        .parent = QSFP_MODULE_BASE_NR + 27, 
+    {
+        .parent = QSFP_MODULE_BASE_NR + 27,
         .info = { SFF8436_INFO(&sff_8436_port[27]) },
     },
-    { 
-        .parent = QSFP_MODULE_BASE_NR + 28, 
+    {
+        .parent = QSFP_MODULE_BASE_NR + 28,
         .info = { SFF8436_INFO(&sff_8436_port[28]) },
     },
-    { 
-        .parent = QSFP_MODULE_BASE_NR + 29, 
+    {
+        .parent = QSFP_MODULE_BASE_NR + 29,
         .info = { SFF8436_INFO(&sff_8436_port[29]) },
     },
-    { 
-        .parent = QSFP_MODULE_BASE_NR + 30, 
+    {
+        .parent = QSFP_MODULE_BASE_NR + 30,
         .info = { SFF8436_INFO(&sff_8436_port[30]) },
         .client = NULL,
     },
-    { 
-        .parent = QSFP_MODULE_BASE_NR + 31, 
+    {
+        .parent = QSFP_MODULE_BASE_NR + 31,
         .info = { SFF8436_INFO(&sff_8436_port[31]) },
         .client = NULL,
     },
@@ -872,7 +872,7 @@ static int qsfp_mux_select(struct i2c_adapter *adap, void *data, u32 chan)
 {
     struct qsfp_mux *mux = data;
     unsigned short mask = ~(unsigned short)(1 << chan);
-   
+
     cpld_reg_write_byte(mux->data.cpld, mux->data.reg_addr, (u8)(mask & 0xff));
     return cpld_reg_write_byte(mux->data.cpld, mux->data.reg_addr + 1, (u8)(mask >> 8));
 }
@@ -971,7 +971,7 @@ static struct platform_driver qsfp_mux_driver = {
 /* TODO */
 /* module_platform_driver */
 
-static ssize_t get_modsel(struct device *dev, struct device_attribute *devattr, char *buf) 
+static ssize_t get_modsel(struct device *dev, struct device_attribute *devattr, char *buf)
 {
     int ret;
     u32 data = 0;
@@ -981,26 +981,26 @@ static ssize_t get_modsel(struct device *dev, struct device_attribute *devattr, 
     if (ret < 0)
         return sprintf(buf, "na");
     data = (u32)ret & 0xff;
- 
+
     ret = i2c_smbus_read_byte_data(pdata[slave_cpld].client, 0x1);
     if (ret < 0)
         return sprintf(buf, "na");
     data |= (u32)(ret & 0xff) << 8;
- 
+
     ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0xa);
     if (ret < 0)
         return sprintf(buf, "na");
     data |= (u32)(ret & 0xff) << 16;
-        
+
     ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0xb);
     if (ret < 0)
         return sprintf(buf, "na");
     data |= (u32)(ret & 0xff) << 24;
-        
+
     return sprintf(buf, "0x%08x\n", data);
 }
 
-static ssize_t get_lpmode(struct device *dev, struct device_attribute *devattr, char *buf) 
+static ssize_t get_lpmode(struct device *dev, struct device_attribute *devattr, char *buf)
 {
     int ret;
     u32 data = 0;
@@ -1010,26 +1010,26 @@ static ssize_t get_lpmode(struct device *dev, struct device_attribute *devattr, 
     if (ret < 0)
         return sprintf(buf, "na");
     data = (u32)ret & 0xff;
- 
+
     ret = i2c_smbus_read_byte_data(pdata[slave_cpld].client, 0x3);
     if (ret < 0)
         return sprintf(buf, "na");
     data |= (u32)(ret & 0xff) << 8;
- 
+
     ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0xc);
     if (ret < 0)
         return sprintf(buf, "na");
     data |= (u32)(ret & 0xff) << 16;
-        
+
     ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0xd);
     if (ret < 0)
         return sprintf(buf, "na");
     data |= (u32)(ret & 0xff) << 24;
-        
+
     return sprintf(buf, "0x%08x\n", data);
 }
 
-static ssize_t set_lpmode(struct device *dev, struct device_attribute *devattr, const char *buf, size_t count) 
+static ssize_t set_lpmode(struct device *dev, struct device_attribute *devattr, const char *buf, size_t count)
 {
     unsigned long data;
     int err;
@@ -1047,7 +1047,7 @@ static ssize_t set_lpmode(struct device *dev, struct device_attribute *devattr, 
     return count;
 }
 
-static ssize_t get_reset(struct device *dev, struct device_attribute *devattr, char *buf) 
+static ssize_t get_reset(struct device *dev, struct device_attribute *devattr, char *buf)
 {
     int ret;
     u32 data = 0;
@@ -1057,26 +1057,26 @@ static ssize_t get_reset(struct device *dev, struct device_attribute *devattr, c
     if (ret < 0)
         return sprintf(buf, "na");
     data = (u32)ret & 0xff;
- 
+
     ret = i2c_smbus_read_byte_data(pdata[slave_cpld].client, 0x7);
     if (ret < 0)
         return sprintf(buf, "na");
     data |= (u32)(ret & 0xff) << 8;
- 
+
     ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0x10);
     if (ret < 0)
         return sprintf(buf, "na");
     data |= (u32)(ret & 0xff) << 16;
-        
+
     ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0x11);
     if (ret < 0)
         return sprintf(buf, "na");
     data |= (u32)(ret & 0xff) << 24;
- 
+
     return sprintf(buf, "0x%08x\n", data);
 }
 
-static ssize_t set_reset(struct device *dev, struct device_attribute *devattr, const char *buf, size_t count) 
+static ssize_t set_reset(struct device *dev, struct device_attribute *devattr, const char *buf, size_t count)
 {
     unsigned long data;
     int err;
@@ -1094,7 +1094,7 @@ static ssize_t set_reset(struct device *dev, struct device_attribute *devattr, c
     return count;
 }
 
-static ssize_t get_modprs(struct device *dev, struct device_attribute *devattr, char *buf) 
+static ssize_t get_modprs(struct device *dev, struct device_attribute *devattr, char *buf)
 {
     int ret;
     u32 data = 0;
@@ -1104,17 +1104,17 @@ static ssize_t get_modprs(struct device *dev, struct device_attribute *devattr, 
     if (ret < 0)
         return sprintf(buf, "read error");
     data = (u32)ret & 0xff;
- 
+
     ret = i2c_smbus_read_byte_data(pdata[slave_cpld].client, 0x5);
     if (ret < 0)
         return sprintf(buf, "read error");
     data |= (u32)(ret & 0xff) << 8;
- 
+
     ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0xe);
     if (ret < 0)
         return sprintf(buf, "na");
     data |= (u32)(ret & 0xff) << 16;
-        
+
     ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0xf);
     if (ret < 0)
         return sprintf(buf, "na");
@@ -1123,7 +1123,7 @@ static ssize_t get_modprs(struct device *dev, struct device_attribute *devattr, 
     return sprintf(buf, "0x%08x\n", data);
 }
 
-static ssize_t set_power_reset(struct device *dev, struct device_attribute *devattr, const char *buf, size_t count) 
+static ssize_t set_power_reset(struct device *dev, struct device_attribute *devattr, const char *buf, size_t count)
 {
     unsigned long data;
     int err;
@@ -1141,11 +1141,612 @@ static ssize_t set_power_reset(struct device *dev, struct device_attribute *deva
     return count;
 }
 
+static ssize_t get_power_reset(struct device *dev, struct device_attribute *devattr, char *buf)
+{
+    return sprintf(buf, "0\n");
+}
+
+static ssize_t get_fan_prs(struct device *dev, struct device_attribute *devattr, char *buf)
+{
+    int ret;
+    u32 data = 0;
+    struct cpld_platform_data *pdata = dev->platform_data;
+
+    ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0x8);
+    if (ret < 0)
+        return sprintf(buf, "read error");
+    data = (u32)((ret & 0xc0) >> 6);
+
+    ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0x9);
+    if (ret < 0)
+        return sprintf(buf, "read error");
+    data |= (u32)((ret & 0x01) << 2);
+    data = ~data & 0x7;
+
+    return sprintf(buf, "0x%x\n", data);
+}
+
+static ssize_t get_psu0_prs(struct device *dev, struct device_attribute *devattr, char *buf)
+{
+    int ret;
+    u32 data = 0;
+    struct cpld_platform_data *pdata = dev->platform_data;
+
+    ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0x3);
+    if (ret < 0)
+        return sprintf(buf, "read error");
+
+    if (!(ret & 0x80))
+        data = 1;
+
+    return sprintf(buf, "%d\n", data);
+}
+
+static ssize_t get_psu1_prs(struct device *dev, struct device_attribute *devattr, char *buf)
+{
+    int ret;
+    u32 data = 0;
+    struct cpld_platform_data *pdata = dev->platform_data;
+
+    ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0x3);
+    if (ret < 0)
+        return sprintf(buf, "read error");
+
+    if (!(ret & 0x08))
+        data = 1;
+
+    return sprintf(buf, "%d\n", data);
+}
+
+static ssize_t get_psu0_status(struct device *dev, struct device_attribute *devattr, char *buf)
+{
+    int ret;
+    u32 data = 0;
+    struct cpld_platform_data *pdata = dev->platform_data;
+
+    ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0x3);
+    if (ret < 0)
+        return sprintf(buf, "read error");
+
+    if (!(ret & 0x40))
+        data = 1;
+
+    return sprintf(buf, "%d\n", data);
+}
+
+static ssize_t get_psu1_status(struct device *dev, struct device_attribute *devattr, char *buf)
+{
+    int ret;
+    u32 data = 0;
+    struct cpld_platform_data *pdata = dev->platform_data;
+
+    ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0x3);
+    if (ret < 0)
+        return sprintf(buf, "read error");
+
+    if (!(ret & 0x04))
+        data = 1;
+
+    return sprintf(buf, "%d\n", data);
+}
+
+static ssize_t get_system_led(struct device *dev, struct device_attribute *devattr, char *buf)
+{
+    int ret;
+    u32 data = 0;
+    struct cpld_platform_data *pdata = dev->platform_data;
+
+    ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0x7);
+    if (ret < 0)
+        return sprintf(buf, "read error");
+
+    data = (u32)(ret & 0x60) >> 5;
+
+    switch (data)
+    {
+        case 0:
+            ret = sprintf(buf, "blink_green\n");
+            break;
+        case 1:
+            ret = sprintf(buf, "green\n");
+            break;
+        case 2:
+            ret = sprintf(buf, "yellow\n");
+            break;
+        default:
+            ret = sprintf(buf, "blink_yellow\n");
+    }
+
+    return ret;
+}
+
+static ssize_t set_system_led(struct device *dev, struct device_attribute *devattr, const char *buf, size_t count)
+{
+    int ret;
+    u32 data = 0;
+    struct cpld_platform_data *pdata = dev->platform_data;
+
+    if (!strncmp(buf, "blink_green", 11))
+    {
+        data = 0;
+    }
+    else if (!strncmp(buf, "green", 5))
+    {
+        data = 1;
+    }
+    else if (!strncmp(buf, "yellow", 6))
+    {
+        data = 2;
+    }
+    else if (!strncmp(buf, "blink_yellow", 12))
+    {
+        data = 3;
+    }
+    else
+    {
+        return -1;
+    }
+
+    ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0x7);
+    if (ret < 0)
+        return ret;
+
+    i2c_smbus_write_byte_data(pdata[master_cpld].client, 0x7, (u8)((ret & 0x9F) | (data << 5)));
+
+    return count;
+}
+
+static ssize_t get_locator_led(struct device *dev, struct device_attribute *devattr, char *buf)
+{
+    int ret;
+    u32 data = 0;
+    struct cpld_platform_data *pdata = dev->platform_data;
+
+    ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0x7);
+    if (ret < 0)
+        return sprintf(buf, "read error");
+
+    data = (u32)(ret & 0x18) >> 3;
+
+    switch (data)
+    {
+        case 0:
+            ret = sprintf(buf, "off\n");
+            break;
+        case 1:
+            ret = sprintf(buf, "blink_blue\n");
+            break;
+        case 2:
+            ret = sprintf(buf, "blue\n");
+            break;
+        default:
+            ret = sprintf(buf, "invalid\n");
+    }
+
+    return ret;
+}
+
+static ssize_t set_locator_led(struct device *dev, struct device_attribute *devattr, const char *buf, size_t count)
+{
+    int ret;
+    u32 data = 0;
+    struct cpld_platform_data *pdata = dev->platform_data;
+
+    if (!strncmp(buf, "off", 3))
+    {
+        data = 0;
+    }
+    else if (!strncmp(buf, "blink_blue", 10))
+    {
+        data = 1;
+    }
+    else if (!strncmp(buf, "blue", 4))
+    {
+        data = 2;
+    }
+    else
+    {
+        return -1;
+    }
+
+    ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0x7);
+    if (ret < 0)
+        return ret;
+
+    i2c_smbus_write_byte_data(pdata[master_cpld].client, 0x7, (u8)((ret & 0xE7) | (data << 3)));
+
+    return count;
+}
+
+static ssize_t get_power_led(struct device *dev, struct device_attribute *devattr, char *buf)
+{
+    int ret;
+    u32 data = 0;
+    struct cpld_platform_data *pdata = dev->platform_data;
+
+    ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0x7);
+    if (ret < 0)
+        return sprintf(buf, "read error");
+
+    data = (u32)(ret & 0x06) >> 1;
+
+    switch (data)
+    {
+        case 0:
+            ret = sprintf(buf, "off\n");
+            break;
+        case 1:
+            ret = sprintf(buf, "yellow\n");
+            break;
+        case 2:
+            ret = sprintf(buf, "green\n");
+            break;
+        default:
+            ret = sprintf(buf, "blink_yellow\n");
+    }
+
+    return ret;
+}
+
+static ssize_t set_power_led(struct device *dev, struct device_attribute *devattr, const char *buf, size_t count)
+{
+    int ret;
+    u32 data = 0;
+    struct cpld_platform_data *pdata = dev->platform_data;
+
+    if (!strncmp(buf, "off", 3))
+    {
+        data = 0;
+    }
+    else if (!strncmp(buf, "yellow", 6))
+    {
+        data = 1;
+    }
+    else if (!strncmp(buf, "green", 5))
+    {
+        data = 2;
+    }
+    else if (!strncmp(buf, "blink_yellow", 12))
+    {
+        data = 3;
+    }
+    else
+    {
+        return -1;
+    }
+
+    ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0x7);
+    if (ret < 0)
+        return ret;
+
+    i2c_smbus_write_byte_data(pdata[master_cpld].client, 0x7, (u8)((ret & 0xF9) | (data << 1)));
+
+    return count;
+}
+
+static ssize_t get_master_led(struct device *dev, struct device_attribute *devattr, char *buf)
+{
+    int ret;
+    u32 data = 0;
+    struct cpld_platform_data *pdata = dev->platform_data;
+
+    ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0x7);
+    if (ret < 0)
+        return sprintf(buf, "read error");
+
+    data = (u32)(ret & 0x1);
+
+    switch (data)
+    {
+        case 0:
+            ret = sprintf(buf, "green\n");
+            break;
+        default:
+            ret = sprintf(buf, "off\n");
+            break;
+    }
+
+    return ret;
+}
+
+static ssize_t set_master_led(struct device *dev, struct device_attribute *devattr, const char *buf, size_t count)
+{
+    int ret;
+    u32 data = 0;
+    struct cpld_platform_data *pdata = dev->platform_data;
+
+    if (!strncmp(buf, "green", 5))
+    {
+        data = 0;
+    }
+    else if (!strncmp(buf, "off", 3))
+    {
+        data = 1;
+    }
+    else
+    {
+        return -1;
+    }
+
+    ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0x7);
+    if (ret < 0)
+        return ret;
+
+    i2c_smbus_write_byte_data(pdata[master_cpld].client, 0x7, (u8)((ret & 0xFE) | data));
+
+    return count;
+}
+
+static ssize_t get_fan_led(struct device *dev, struct device_attribute *devattr, char *buf)
+{
+    int ret;
+    u32 data = 0;
+    struct cpld_platform_data *pdata = dev->platform_data;
+
+    ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0x9);
+    if (ret < 0)
+        return sprintf(buf, "read error");
+
+    data = (u32)(ret & 0x18) >> 3;
+
+    switch (data)
+    {
+        case 0:
+            ret = sprintf(buf, "off\n");
+            break;
+        case 1:
+            ret = sprintf(buf, "yellow\n");
+            break;
+        case 2:
+            ret = sprintf(buf, "green\n");
+            break;
+        default:
+            ret = sprintf(buf, "blink_yellow\n");
+    }
+
+    return ret;
+}
+
+static ssize_t set_fan_led(struct device *dev, struct device_attribute *devattr, const char *buf, size_t count)
+{
+    int ret;
+    u32 data = 0;
+    struct cpld_platform_data *pdata = dev->platform_data;
+
+    if (!strncmp(buf, "off", 3))
+    {
+        data = 0;
+    }
+    else if (!strncmp(buf, "yellow", 6))
+    {
+        data = 1;
+    }
+    else if (!strncmp(buf, "green", 5))
+    {
+        data = 2;
+    }
+    else if (!strncmp(buf, "blink_yellow", 12))
+    {
+        data = 3;
+    }
+    else
+    {
+        return -1;
+    }
+
+    ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0x9);
+    if (ret < 0)
+        return ret;
+
+    i2c_smbus_write_byte_data(pdata[master_cpld].client, 0x9, (u8)((ret & 0xE7) | (data << 3)));
+
+    return count;
+}
+
+static ssize_t get_fan2_led(struct device *dev, struct device_attribute *devattr, char *buf)
+{
+    int ret;
+    u32 data = 0;
+    struct cpld_platform_data *pdata = dev->platform_data;
+
+    ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0x8);
+    if (ret < 0)
+        return sprintf(buf, "read error");
+
+    data = (u32)(ret & 0x30) >> 4;
+
+    switch (data)
+    {
+        case 0:
+            ret = sprintf(buf, "off\n");
+            break;
+        case 1:
+            ret = sprintf(buf, "green\n");
+            break;
+        case 2:
+            ret = sprintf(buf, "yellow\n");
+            break;
+        default:
+            ret = sprintf(buf, "unknown\n");
+    }
+
+    return ret;
+}
+
+static ssize_t set_fan2_led(struct device *dev, struct device_attribute *devattr, const char *buf, size_t count)
+{
+    int ret;
+    u32 data = 0;
+    struct cpld_platform_data *pdata = dev->platform_data;
+
+    if (!strncmp(buf, "off", 3))
+    {
+        data = 0;
+    }
+    else if (!strncmp(buf, "yellow", 6))
+    {
+        data = 2;
+    }
+    else if (!strncmp(buf, "green", 5))
+    {
+        data = 1;
+    }
+    else
+    {
+        return -1;
+    }
+
+    ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0x8);
+    if (ret < 0)
+        return ret;
+
+    i2c_smbus_write_byte_data(pdata[master_cpld].client, 0x8, (u8)((ret & 0xCF) | (data << 4)));
+
+    return count;
+}
+
+static ssize_t get_fan1_led(struct device *dev, struct device_attribute *devattr, char *buf)
+{
+    int ret;
+    u32 data = 0;
+    struct cpld_platform_data *pdata = dev->platform_data;
+
+    ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0x8);
+    if (ret < 0)
+        return sprintf(buf, "read error");
+
+    data = (u32)(ret & 0xc) >> 4;
+
+    switch (data)
+    {
+        case 0:
+            ret = sprintf(buf, "off\n");
+            break;
+        case 1:
+            ret = sprintf(buf, "green\n");
+            break;
+        case 2:
+            ret = sprintf(buf, "yellow\n");
+            break;
+        default:
+            ret = sprintf(buf, "unknown\n");
+    }
+
+    return ret;
+}
+
+static ssize_t set_fan1_led(struct device *dev, struct device_attribute *devattr, const char *buf, size_t count)
+{
+    int ret;
+    u32 data = 0;
+    struct cpld_platform_data *pdata = dev->platform_data;
+
+    if (!strncmp(buf, "off", 3))
+    {
+        data = 0;
+    }
+    else if (!strncmp(buf, "yellow", 6))
+    {
+        data = 2;
+    }
+    else if (!strncmp(buf, "green", 5))
+    {
+        data = 1;
+    }
+    else
+    {
+        return -1;
+    }
+
+    ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0x8);
+    if (ret < 0)
+        return ret;
+
+    i2c_smbus_write_byte_data(pdata[master_cpld].client, 0x8, (u8)((ret & 0xF3) | (data << 2)));
+
+    return count;
+}
+
+static ssize_t get_fan0_led(struct device *dev, struct device_attribute *devattr, char *buf)
+{
+    int ret;
+    u32 data = 0;
+    struct cpld_platform_data *pdata = dev->platform_data;
+
+    ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0x8);
+    if (ret < 0)
+        return sprintf(buf, "read error");
+
+    data = (u32)(ret & 0x3);
+
+    switch (data)
+    {
+        case 0:
+            ret = sprintf(buf, "off\n");
+            break;
+        case 1:
+            ret = sprintf(buf, "green\n");
+            break;
+        case 2:
+            ret = sprintf(buf, "yellow\n");
+            break;
+        default:
+            ret = sprintf(buf, "unknown\n");
+    }
+
+    return ret;
+}
+
+static ssize_t set_fan0_led(struct device *dev, struct device_attribute *devattr, const char *buf, size_t count)
+{
+    int ret;
+    u32 data = 0;
+    struct cpld_platform_data *pdata = dev->platform_data;
+
+    if (!strncmp(buf, "off", 3))
+    {
+        data = 0;
+    }
+    else if (!strncmp(buf, "yellow", 6))
+    {
+        data = 2;
+    }
+    else if (!strncmp(buf, "green", 5))
+    {
+        data = 1;
+    }
+    else
+    {
+        return -1;
+    }
+
+    ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0x8);
+    if (ret < 0)
+        return ret;
+
+    i2c_smbus_write_byte_data(pdata[master_cpld].client, 0x8, (u8)((ret & 0xFC) | data));
+
+    return count;
+}
+
 static DEVICE_ATTR(qsfp_modsel, S_IRUGO, get_modsel, NULL);
 static DEVICE_ATTR(qsfp_modprs, S_IRUGO, get_modprs, NULL);
 static DEVICE_ATTR(qsfp_lpmode, S_IRUGO | S_IWUSR, get_lpmode, set_lpmode);
 static DEVICE_ATTR(qsfp_reset,  S_IRUGO | S_IWUSR, get_reset, set_reset);
-static DEVICE_ATTR(power_reset, S_IRUGO | S_IWUSR, NULL, set_power_reset);
+static DEVICE_ATTR(power_reset, S_IRUGO | S_IWUSR, get_power_reset, set_power_reset);
+static DEVICE_ATTR(fan_prs, S_IRUGO, get_fan_prs, NULL);
+static DEVICE_ATTR(psu0_prs, S_IRUGO, get_psu0_prs, NULL);
+static DEVICE_ATTR(psu1_prs, S_IRUGO, get_psu1_prs, NULL);
+static DEVICE_ATTR(psu0_status, S_IRUGO, get_psu0_status, NULL);
+static DEVICE_ATTR(psu1_status, S_IRUGO, get_psu1_status, NULL);
+static DEVICE_ATTR(system_led, S_IRUGO | S_IWUSR, get_system_led, set_system_led);
+static DEVICE_ATTR(locator_led, S_IRUGO | S_IWUSR, get_locator_led, set_locator_led);
+static DEVICE_ATTR(power_led, S_IRUGO | S_IWUSR, get_power_led, set_power_led);
+static DEVICE_ATTR(master_led, S_IRUGO | S_IWUSR, get_master_led, set_master_led);
+static DEVICE_ATTR(fan_led, S_IRUGO | S_IWUSR, get_fan_led, set_fan_led);
+static DEVICE_ATTR(fan0_led, S_IRUGO | S_IWUSR, get_fan0_led, set_fan0_led);
+static DEVICE_ATTR(fan1_led, S_IRUGO | S_IWUSR, get_fan1_led, set_fan1_led);
+static DEVICE_ATTR(fan2_led, S_IRUGO | S_IWUSR, get_fan2_led, set_fan2_led);
 
 static struct attribute *s6000_cpld_attrs[] = {
     &dev_attr_qsfp_modsel.attr,
@@ -1153,6 +1754,19 @@ static struct attribute *s6000_cpld_attrs[] = {
     &dev_attr_qsfp_reset.attr,
     &dev_attr_qsfp_modprs.attr,
     &dev_attr_power_reset.attr,
+    &dev_attr_fan_prs.attr,
+    &dev_attr_psu0_prs.attr,
+    &dev_attr_psu1_prs.attr,
+    &dev_attr_psu0_status.attr,
+    &dev_attr_psu1_status.attr,
+    &dev_attr_system_led.attr,
+    &dev_attr_locator_led.attr,
+    &dev_attr_power_led.attr,
+    &dev_attr_master_led.attr,
+    &dev_attr_fan_led.attr,
+    &dev_attr_fan0_led.attr,
+    &dev_attr_fan1_led.attr,
+    &dev_attr_fan2_led.attr,
     NULL,
 };
 
@@ -1189,7 +1803,7 @@ static int __init cpld_probe(struct platform_device *pdev)
     }
 
     ret = sysfs_create_group(&pdev->dev.kobj, &s6000_cpld_attr_grp);
-    if (ret) 
+    if (ret)
         goto error;
 
     return 0;
@@ -1203,8 +1817,8 @@ error:
     }
 
     i2c_put_adapter(parent);
-    
-    return -ENODEV; 
+
+    return -ENODEV;
 }
 
 static int __exit cpld_remove(struct platform_device *pdev)
@@ -1310,7 +1924,7 @@ static int __init dell_s6000_platform_init(void)
     printk("delll_s6000_platform module initialization\n");
 
     mdelay(10000);
-    
+
     ret = platform_driver_register(&cpld_driver);
     if (ret) {
         printk(KERN_WARNING "Fail to register cpld driver\n");
