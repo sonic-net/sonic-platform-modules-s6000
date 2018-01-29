@@ -1543,130 +1543,6 @@ static ssize_t set_fan_led(struct device *dev, struct device_attribute *devattr,
     return count;
 }
 
-static ssize_t get_fan2_led(struct device *dev, struct device_attribute *devattr, char *buf)
-{
-    int ret;
-    u32 data = 0;
-    struct cpld_platform_data *pdata = dev->platform_data;
-
-    ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0x8);
-    if (ret < 0)
-        return sprintf(buf, "read error");
-
-    data = (u32)(ret & 0x30) >> 4;
-
-    switch (data)
-    {
-        case 0:
-            ret = sprintf(buf, "off\n");
-            break;
-        case 1:
-            ret = sprintf(buf, "green\n");
-            break;
-        case 2:
-            ret = sprintf(buf, "yellow\n");
-            break;
-        default:
-            ret = sprintf(buf, "unknown\n");
-    }
-
-    return ret;
-}
-
-static ssize_t set_fan2_led(struct device *dev, struct device_attribute *devattr, const char *buf, size_t count)
-{
-    int ret;
-    u32 data = 0;
-    struct cpld_platform_data *pdata = dev->platform_data;
-
-    if (!strncmp(buf, "off", 3))
-    {
-        data = 0;
-    }
-    else if (!strncmp(buf, "yellow", 6))
-    {
-        data = 2;
-    }
-    else if (!strncmp(buf, "green", 5))
-    {
-        data = 1;
-    }
-    else
-    {
-        return -1;
-    }
-
-    ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0x8);
-    if (ret < 0)
-        return ret;
-
-    i2c_smbus_write_byte_data(pdata[master_cpld].client, 0x8, (u8)((ret & 0xCF) | (data << 4)));
-
-    return count;
-}
-
-static ssize_t get_fan1_led(struct device *dev, struct device_attribute *devattr, char *buf)
-{
-    int ret;
-    u32 data = 0;
-    struct cpld_platform_data *pdata = dev->platform_data;
-
-    ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0x8);
-    if (ret < 0)
-        return sprintf(buf, "read error");
-
-    data = (u32)(ret & 0xc) >> 4;
-
-    switch (data)
-    {
-        case 0:
-            ret = sprintf(buf, "off\n");
-            break;
-        case 1:
-            ret = sprintf(buf, "green\n");
-            break;
-        case 2:
-            ret = sprintf(buf, "yellow\n");
-            break;
-        default:
-            ret = sprintf(buf, "unknown\n");
-    }
-
-    return ret;
-}
-
-static ssize_t set_fan1_led(struct device *dev, struct device_attribute *devattr, const char *buf, size_t count)
-{
-    int ret;
-    u32 data = 0;
-    struct cpld_platform_data *pdata = dev->platform_data;
-
-    if (!strncmp(buf, "off", 3))
-    {
-        data = 0;
-    }
-    else if (!strncmp(buf, "yellow", 6))
-    {
-        data = 2;
-    }
-    else if (!strncmp(buf, "green", 5))
-    {
-        data = 1;
-    }
-    else
-    {
-        return -1;
-    }
-
-    ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0x8);
-    if (ret < 0)
-        return ret;
-
-    i2c_smbus_write_byte_data(pdata[master_cpld].client, 0x8, (u8)((ret & 0xF3) | (data << 2)));
-
-    return count;
-}
-
 static ssize_t get_fan0_led(struct device *dev, struct device_attribute *devattr, char *buf)
 {
     int ret;
@@ -1725,6 +1601,131 @@ static ssize_t set_fan0_led(struct device *dev, struct device_attribute *devattr
         return ret;
 
     i2c_smbus_write_byte_data(pdata[master_cpld].client, 0x8, (u8)((ret & 0xFC) | data));
+
+    return count;
+}
+
+
+static ssize_t get_fan1_led(struct device *dev, struct device_attribute *devattr, char *buf)
+{
+    int ret;
+    u32 data = 0;
+    struct cpld_platform_data *pdata = dev->platform_data;
+
+    ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0x8);
+    if (ret < 0)
+        return sprintf(buf, "read error");
+
+    data = (u32)(ret & 0xc) >> 2;
+
+    switch (data)
+    {
+        case 0:
+            ret = sprintf(buf, "off\n");
+            break;
+        case 1:
+            ret = sprintf(buf, "green\n");
+            break;
+        case 2:
+            ret = sprintf(buf, "yellow\n");
+            break;
+        default:
+            ret = sprintf(buf, "unknown\n");
+    }
+
+    return ret;
+}
+
+static ssize_t set_fan1_led(struct device *dev, struct device_attribute *devattr, const char *buf, size_t count)
+{
+    int ret;
+    u32 data = 0;
+    struct cpld_platform_data *pdata = dev->platform_data;
+
+    if (!strncmp(buf, "off", 3))
+    {
+        data = 0;
+    }
+    else if (!strncmp(buf, "yellow", 6))
+    {
+        data = 2;
+    }
+    else if (!strncmp(buf, "green", 5))
+    {
+        data = 1;
+    }
+    else
+    {
+        return -1;
+    }
+
+    ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0x8);
+    if (ret < 0)
+        return ret;
+
+    i2c_smbus_write_byte_data(pdata[master_cpld].client, 0x8, (u8)((ret & 0xF3) | (data << 2)));
+
+    return count;
+}
+
+static ssize_t get_fan2_led(struct device *dev, struct device_attribute *devattr, char *buf)
+{
+    int ret;
+    u32 data = 0;
+    struct cpld_platform_data *pdata = dev->platform_data;
+
+    ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0x8);
+    if (ret < 0)
+        return sprintf(buf, "read error");
+
+    data = (u32)(ret & 0x30) >> 4;
+
+    switch (data)
+    {
+        case 0:
+            ret = sprintf(buf, "off\n");
+            break;
+        case 1:
+            ret = sprintf(buf, "green\n");
+            break;
+        case 2:
+            ret = sprintf(buf, "yellow\n");
+            break;
+        default:
+            ret = sprintf(buf, "unknown\n");
+    }
+
+    return ret;
+}
+
+static ssize_t set_fan2_led(struct device *dev, struct device_attribute *devattr, const char *buf, size_t count)
+{
+    int ret;
+    u32 data = 0;
+    struct cpld_platform_data *pdata = dev->platform_data;
+
+    if (!strncmp(buf, "off", 3))
+    {
+        data = 0;
+    }
+    else if (!strncmp(buf, "yellow", 6))
+    {
+        data = 2;
+    }
+    else if (!strncmp(buf, "green", 5))
+    {
+        data = 1;
+    }
+    else
+    {
+        return -1;
+    }
+
+    ret = i2c_smbus_read_byte_data(pdata[master_cpld].client, 0x8);
+    if (ret < 0)
+        return ret;
+
+    i2c_smbus_write_byte_data(pdata[master_cpld].client, 0x8, (u8)((ret & 0xCF) | (data << 4)));
 
     return count;
 }
