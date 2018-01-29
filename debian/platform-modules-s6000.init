@@ -18,7 +18,6 @@ start)
         depmod -a
         modprobe i2c_mux_gpio
         modprobe dell_s6000_platform
-        modprobe w83627ehf
 
         /usr/local/bin/set-fan-speed 15000
         /usr/local/bin/reset-qsfp
@@ -28,7 +27,6 @@ start)
 
 stop)
 	echo "done."
-        rmmod w83627ehf
         rmmod dell_s6000_platform
         rmmod i2c_mux_gpio
 	;;
