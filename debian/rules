@@ -9,7 +9,7 @@ MODULE_SRC := $(shell pwd)/modules
 SCRIPT_SRC := $(shell pwd)/scripts
 
 %:
-	dh $@
+	dh $@ --with=systemd
 
 override_dh_auto_build:
 	make -C $(KERNEL_SRC)/build M=$(MODULE_SRC)
